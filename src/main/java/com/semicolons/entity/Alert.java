@@ -1,0 +1,61 @@
+package com.semicolons.entity;
+
+import jakarta.persistence.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "alerts")
+public class Alert {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false)
+    private Double score;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "alert_signals", joinColumns = @JoinColumn(name = "alert_id"))
+    @Column(name = "signal")
+    private List<String> signals = new ArrayList<>();
+
+    @Column(nullable = false)
+    private LocalDateTime timestamp;
+
+    @Column(nullable = false)
+    private String status; // "TRIGGERED", "ACKNOWLEDGED", "RESOLVED"
+
+    public Alert() {}
+
+    public Alert(Long userId, Double score, List<String> signals, Long epochMillis) {
+        this.userId = userId;
+        this.score = score;
+        this.signals = (signals != null) ? signals : new ArrayList<>();
+        this.status = "TRIGGERED";
+        
+        if (epochMillis != null && epochMillis > 0) {
+            this.timestamp = LocalDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneId.systemDefault());
+        } else {
+            this.timestamp = LocalDateTime.now();
+        }
+    }
+
+    public Long getId() { return id; }
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+    public Double getScore() { return score; }
+    public void setScore(Double score) { this.score = score; }
+    public List<String> getSignals() { return signals; }
+    public void setSignals(List<String> signals) { this.signals = signals; }
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+}
