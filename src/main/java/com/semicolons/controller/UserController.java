@@ -1,5 +1,7 @@
 package com.semicolons.controller;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.semicolons.dto.DeviceRegistrationDTO;
 import com.semicolons.entity.User;
 import com.semicolons.service.UserService;
@@ -43,6 +45,15 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @DeleteMapping("/device/{deviceUuid}")
+    @Transactional
+    public ResponseEntity<?> unregisterDevice(@PathVariable String deviceUuid) {
+        return userRepository.findByDeviceUuid(deviceUuid).map(user -> {
+            userRepository.delete(user);
+            return ResponseEntity.noContent().build();
+        }).orElse(ResponseEntity.notFound().build());
     }
 
 }

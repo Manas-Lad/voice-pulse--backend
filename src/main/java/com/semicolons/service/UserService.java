@@ -45,5 +45,12 @@ public class UserService {
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
+    
+    public boolean deleteByDeviceUuid(String deviceUuid) {
+    return userRepository.findByDeviceUuid(deviceUuid).map(user -> {
+        userRepository.delete(user);
+        return true;
+    }).orElse(false);
+}
 
 }
