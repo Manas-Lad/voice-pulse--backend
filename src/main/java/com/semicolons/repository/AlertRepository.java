@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface AlertRepository extends JpaRepository<Alert, Long> {
     List<Alert> findByUserIdOrderByTimestampDesc(Long userId);
+    List<Alert> findByDeviceUuidOrderByTimestampDesc(String deviceUuid);
 }

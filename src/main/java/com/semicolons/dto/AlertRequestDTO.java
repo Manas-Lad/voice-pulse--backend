@@ -3,6 +3,7 @@ package com.semicolons.dto;
 import java.util.List;
 
 public class AlertRequestDTO {
+    private String deviceUuid;
     private Long userId;
     private Long timestamp;
     private Double score;
@@ -10,6 +11,8 @@ public class AlertRequestDTO {
 
     public AlertRequestDTO() {}
 
+    public String getDeviceUuid() { return deviceUuid; }
+    public void setDeviceUuid(String deviceUuid) { this.deviceUuid = deviceUuid; }
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
     public Long getTimestamp() { return timestamp; }
