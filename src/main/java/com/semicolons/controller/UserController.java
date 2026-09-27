@@ -4,7 +4,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.semicolons.dto.DeviceRegistrationDTO;
 import com.semicolons.entity.User;
+import com.semicolons.repository.UserRepository;
 import com.semicolons.service.UserService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,9 @@ import java.util.List;
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
 public class UserController {
+
+    @Autowired
+    private UserRepository userRepository;
 
     private final UserService userService;
 
@@ -48,12 +54,13 @@ public class UserController {
     }
 
     @DeleteMapping("/device/{deviceUuid}")
-    @Transactional
-    public ResponseEntity<?> unregisterDevice(@PathVariable String deviceUuid) {
-        return userRepository.findByDeviceUuid(deviceUuid).map(user -> {
-            userRepository.delete(user);
-            return ResponseEntity.noContent().build();
-        }).orElse(ResponseEntity.notFound().build());
+@Transactional
+public ResponseEntity<?> unregisterDevice(@PathVariable String deviceUuid) {
+    boolean deleted = userService.deleteByDeviceUuid(deviceUuid);
+    if (deleted) {
+        return ResponseEntity.noContent().build();
     }
+    return ResponseEntity.notFound().build();
+}
 
 }
