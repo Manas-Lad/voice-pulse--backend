@@ -35,4 +35,11 @@ public class AlertController {
     public ResponseEntity<List<Alert>> getAlertsByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(alertService.getAlertsByUserId(userId));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Alert> getAlertById(@PathVariable Long id) {
+        return alertService.getAlertById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

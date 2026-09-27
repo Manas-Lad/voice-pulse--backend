@@ -1,5 +1,6 @@
 package com.semicolons.entity;
 
+import com.semicolons.util.StringListConverter;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -21,16 +22,15 @@ public class Alert {
     @Column(nullable = false)
     private Double score;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "alert_signals", joinColumns = @JoinColumn(name = "alert_id"))
-    @Column(name = "signal")
+    @Convert(converter = StringListConverter.class)
+    @Column(name = "signals")
     private List<String> signals = new ArrayList<>();
 
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
     @Column(nullable = false)
-    private String status; // "TRIGGERED", "ACKNOWLEDGED", "RESOLVED"
+    private String status;
 
     public Alert() {}
 

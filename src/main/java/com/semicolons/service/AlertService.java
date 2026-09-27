@@ -3,6 +3,7 @@ package com.semicolons.service;
 import com.semicolons.dto.AlertRequestDTO;
 import com.semicolons.entity.Alert;
 import com.semicolons.repository.AlertRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class AlertService {
     }
 
     public List<Alert> getAllAlerts() {
-        return alertRepository.findAll();
+        return alertRepository.findAll(Sort.by(Sort.Direction.DESC, "timestamp"));
     }
 
     public List<Alert> getAlertsByUserId(Long userId) {
