@@ -1,14 +1,17 @@
 package com.semicolons.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.semicolons.util.StringListConverter;
 import jakarta.persistence.*;
+import org.springframework.data.domain.Persistable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Persistable<UUID> {
 
     @Id
     @Column(name = "id", nullable = false, updatable = false)
@@ -24,14 +27,37 @@ public class User {
     @Column(name = "custom_codes", columnDefinition = "text")
     private List<String> customCodes = new ArrayList<>();
 
+    @Transient
+    @JsonIgnore
+    private boolean isNew = false;
+
     public User() {}
 
     public User(UUID id) {
         this.id = id;
+        this.isNew = true; // Signals Spring Data to INSERT, not UPDATE
     }
 
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    @Override
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isNew() {
+        return this.isNew || this.name == null;
+    }
+
+    @PostLoad
+    @PostPersist
+    void markNotNew() {
+        this.isNew = false;
+    }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -56,6 +82,6 @@ public class User {
     }
 
     public void setCustomCodes(List<String> customCodes) {
-        this.customCodes = customCodes;
+        this.customCodes = (customCodes != null) ? customCodes : new ArrayList<>();
     }
 }

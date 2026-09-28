@@ -1,29 +1,39 @@
 package com.semicolons.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-@Converter
+@Converter(autoApply = false)
 public class StringListConverter implements AttributeConverter<List<String>, String> {
 
-    private static final String SPLIT_CHAR = ",";
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public String convertToDatabaseColumn(List<String> stringList) {
-        if (stringList == null || stringList.isEmpty()) {
-            return "";
+    public String convertToDatabaseColumn(List<String> attribute) {
+        if (attribute == null || attribute.isEmpty()) {
+            return "[]";
         }
-        return String.join(SPLIT_CHAR, stringList);
+        try {
+            return mapper.writeValueAsString(attribute);
+        } catch (Exception e) {
+            return "[]";
+        }
     }
 
     @Override
-    public List<String> convertToEntityAttribute(String string) {
-        if (string == null || string.trim().isEmpty()) {
+    public List<String> convertToEntityAttribute(String dbData) {
+        if (dbData == null || dbData.trim().isEmpty()) {
             return new ArrayList<>();
         }
-        return new ArrayList<>(Arrays.asList(string.split(SPLIT_CHAR)));
+        try {
+            return mapper.readValue(dbData, new TypeReference<List<String>>() {});
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
 }
