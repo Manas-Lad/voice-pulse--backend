@@ -20,6 +20,7 @@ public class AlertService {
 
     public Alert saveAlert(AlertRequestDTO request) {
         Alert alert = new Alert(
+            request.getDeviceUuid(),
             request.getUserId(),
             request.getScore(),
             request.getSignals(),
@@ -34,6 +35,10 @@ public class AlertService {
 
     public List<Alert> getAlertsByUserId(Long userId) {
         return alertRepository.findByUserIdOrderByTimestampDesc(userId);
+    }
+
+    public List<Alert> getAlertsByDeviceUuid(String deviceUuid) {
+        return alertRepository.findByDeviceUuidOrderByTimestampDesc(deviceUuid);
     }
 
     public Optional<Alert> getAlertById(Long id) {
