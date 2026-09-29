@@ -15,8 +15,9 @@ import java.util.UUID;
 public class Alert {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     @Column(nullable = true)
     private Long userId;
@@ -87,24 +88,30 @@ public class Alert {
         }
     }
 
-    public Long getId() { return id; }
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
     public String getDeviceUuid() { return deviceUuid; }
     public void setDeviceUuid(String deviceUuid) { this.deviceUuid = deviceUuid; }
-    @JsonIgnore
+
     public Double getLatitude() { return latitude; }
     public void setLatitude(Double latitude) { this.latitude = latitude; }
-    @JsonIgnore
+
     public Double getLongitude() { return longitude; }
     public void setLongitude(Double longitude) { this.longitude = longitude; }
-    @JsonIgnore
+
     public Float getLocationAccuracy() { return locationAccuracy; }
     public void setLocationAccuracy(Float locationAccuracy) { this.locationAccuracy = locationAccuracy; }
+
     @JsonIgnore
     public String getShareToken() { return shareToken; }
+    public void setShareToken(String shareToken) { this.shareToken = shareToken; }
+
     @JsonIgnore
     public LocalDateTime getShareExpiresAt() { return shareExpiresAt; }
+    public void setShareExpiresAt(LocalDateTime shareExpiresAt) { this.shareExpiresAt = shareExpiresAt; }
+
     public Double getScore() { return score; }
     public void setScore(Double score) { this.score = score; }
     public List<String> getSignals() { return signals; }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.time.LocalDateTime;
 
 @Service
@@ -45,7 +46,7 @@ public class AlertService {
         return alertRepository.findByDeviceUuidOrderByTimestampDesc(deviceUuid);
     }
 
-    public Optional<Alert> getAlertById(Long id) {
+    public Optional<Alert> getAlertById(UUID id) {
         return alertRepository.findById(id);
     }
 

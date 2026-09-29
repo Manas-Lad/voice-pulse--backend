@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/alerts")
@@ -39,7 +40,7 @@ public class AlertController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Alert> getAlertById(@PathVariable Long id) {
+    public ResponseEntity<Alert> getAlertById(@PathVariable UUID id) {
         return alertService.getAlertById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
