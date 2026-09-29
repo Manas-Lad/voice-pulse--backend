@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 @Service
 public class AlertService {
@@ -24,7 +25,10 @@ public class AlertService {
             request.getUserId(),
             request.getScore(),
             request.getSignals(),
-            request.getTimestamp()
+            request.getTimestamp(),
+            request.getLatitude(),
+            request.getLongitude(),
+            request.getLocationAccuracy()
         );
         return alertRepository.save(alert);
     }
@@ -43,5 +47,11 @@ public class AlertService {
 
     public Optional<Alert> getAlertById(Long id) {
         return alertRepository.findById(id);
+    }
+
+    public Optional<Alert> getSharedAlert(String token) {
+        return alertRepository.findByShareToken(token)
+                .filter(alert -> alert.getShareExpiresAt() != null
+                        && alert.getShareExpiresAt().isAfter(LocalDateTime.now()));
     }
 }
