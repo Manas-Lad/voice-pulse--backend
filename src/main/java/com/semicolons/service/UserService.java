@@ -32,14 +32,30 @@ public class UserService {
     public Optional<User> updateUserByDeviceUuid(String deviceUuid, User updatedUser) {
         UUID uuid = UUID.fromString(deviceUuid);
         return userRepository.findById(uuid).map(user -> {
-            user.setName(updatedUser.getName());
-            user.setPhoneNumber(updatedUser.getPhoneNumber());
-            user.setGender(updatedUser.getGender());
-            user.setDateOfBirth(updatedUser.getDateOfBirth());
-            user.setAddress(updatedUser.getAddress());
+            if(updatedUser.getName() != null) {
+                user.setName(updatedUser.getName());
+            }
+
+            if(updatedUser.getPhoneNumber() != null) {
+                user.setPhoneNumber(updatedUser.getPhoneNumber());
+            }
+            
+            if(updatedUser.getGender() != null) {
+                user.setGender(updatedUser.getGender());
+            }
+            
+            if(updatedUser.getDateOfBirth() != null) {
+                user.setDateOfBirth(updatedUser.getDateOfBirth());
+            }
+            
+            if(updatedUser.getAddress() != null) {
+                user.setAddress(updatedUser.getAddress());
+            }
+
             if (updatedUser.isCustomCodesProvided()) {
                 user.setCustomCodes(updatedUser.getCustomCodes());
             }
+            
             return userRepository.save(user);
         });
     }
