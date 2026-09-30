@@ -1,6 +1,7 @@
 package com.semicolons.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.semicolons.util.StringListConverter;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
@@ -30,6 +31,10 @@ public class User implements Persistable<UUID> {
     @Transient
     @JsonIgnore
     private boolean isNew = false;
+
+    @Transient
+    @JsonIgnore
+    private boolean customCodesProvided = false;
 
     public User() {}
 
@@ -81,7 +86,14 @@ public class User implements Persistable<UUID> {
         return customCodes;
     }
 
+    @JsonSetter("customCodes")
     public void setCustomCodes(List<String> customCodes) {
         this.customCodes = (customCodes != null) ? customCodes : new ArrayList<>();
+        this.customCodesProvided = true;
+    }
+
+    @JsonIgnore
+    public boolean isCustomCodesProvided() {
+        return customCodesProvided;
     }
 }

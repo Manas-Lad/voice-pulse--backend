@@ -37,6 +37,9 @@ public class UserService {
             user.setGender(updatedUser.getGender());
             user.setDateOfBirth(updatedUser.getDateOfBirth());
             user.setAddress(updatedUser.getAddress());
+            if (updatedUser.isCustomCodesProvided()) {
+                user.setCustomCodes(updatedUser.getCustomCodes());
+            }
             return userRepository.save(user);
         });
     }
